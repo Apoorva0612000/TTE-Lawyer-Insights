@@ -2,16 +2,16 @@ import asyncio
 import uuid
 from typing import List, Optional
 
-# NEW: Import APM
-from elasticapm import async_capture_span
-
 from app.feedback_analysis import suggestion_caller_function
 from app.logging_config import logger
 from app.models import SuggestRealtimeRequest
 from app.utils import send_webhook_notification
 
+# NEW: Import APM
+# from elasticapm import async_capture_span
 
-@async_capture_span("process_batch_async")  # NEW: APM span
+
+# @async_capture_span("process_batch_async")  # NEW: APM span
 async def process_batch_async(
     processing_id: str, data: List[SuggestRealtimeRequest], webhook_url: Optional[str]
 ):
@@ -19,7 +19,7 @@ async def process_batch_async(
     logger.info(f"[{processing_id}] Batch processing started with {len(data)} requests")
     semaphore = asyncio.Semaphore(5)
 
-    @async_capture_span("process_single_request")
+    # @async_capture_span("process_single_request")
     async def process_single_request(request_data):
         async with semaphore:
             run_id = uuid.uuid4().hex

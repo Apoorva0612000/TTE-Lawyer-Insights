@@ -7,7 +7,8 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 from cachetools import TTLCache
-from elasticapm import async_capture_span
+
+# from elasticapm import async_capture_span
 from fastapi import HTTPException, UploadFile
 from openai import OpenAI
 from pinecone import Pinecone
@@ -15,9 +16,6 @@ from pinecone import Pinecone
 from app.config import GEMINI_API_KEY, OPENAI_API_KEY, PINECONE_API_KEY
 from app.logging_config import logger
 from app.models import SuggestRealtimeRequest, SuggestResponse
-
-# setting up logger
-
 
 # SETUP
 # Load environment variables
@@ -77,7 +75,7 @@ async def process_transcript_input(request_data):
     return transcript_content
 
 
-@async_capture_span("suggestion_caller_function")
+# @async_capture_span("suggestion_caller_function")
 async def suggestion_caller_function(
     processing_id: Optional[str],
     request_data: SuggestRealtimeRequest,
@@ -153,7 +151,7 @@ def seconds_to_mmss(seconds: int) -> str:
 gemini_prompt_cache = TTLCache(maxsize=5000, ttl=6 * 3600)
 
 
-@async_capture_span("segregate_with_gemini")
+# @async_capture_span("segregate_with_gemini")
 async def segregate_with_gemini(
     full_transcript: str, run_id: str, request_id: str
 ) -> Dict:
@@ -318,7 +316,7 @@ async def segregate_with_gemini(
 openai_prompt_cache = TTLCache(maxsize=5000, ttl=6 * 3600)
 
 
-@async_capture_span("segregate_with_openai")
+# @async_capture_span("segregate_with_openai")
 async def segregate_with_openai(
     full_transcript: str, run_id: str, request_id: str
 ) -> Dict:
@@ -518,7 +516,7 @@ async def segregate_with_openai(
 gemini_eval_cache = TTLCache(maxsize=2000, ttl=6 * 3600)
 
 
-@async_capture_span("evaluate_segments_with_gemini")
+# @async_capture_span("evaluate_segments_with_gemini")
 async def evaluate_segments_with_gemini(
     batch, batch_idx, run_id: str, request_id: str
 ) -> Dict:
@@ -657,7 +655,7 @@ async def evaluate_segments_with_gemini(
 openai_eval_cache = TTLCache(maxsize=2000, ttl=6 * 3600)
 
 
-@async_capture_span("evaluate_segments_with_openai")
+# @async_capture_span("evaluate_segments_with_openai")
 async def evaluate_segments_with_openai(
     batch, batch_idx, run_id: str, request_id: str
 ) -> Dict:
@@ -882,7 +880,7 @@ embedding_cache = TTLCache(maxsize=10000, ttl=6 * 3600)  # 6 hr cache
 pinecone_cache = TTLCache(maxsize=10000, ttl=6 * 3600)
 
 
-@async_capture_span("get_similar_segments_from_pinecone")
+# @async_capture_span("get_similar_segments_from_pinecone")
 async def get_similar_segments_from_pinecone(
     incoming_call_json: Dict[str, Any], pinecone_index, top_k: int = 5
 ) -> List[Dict[str, Any]]:
@@ -1074,7 +1072,7 @@ openai_improvement_cache = TTLCache(maxsize=500, ttl=12 * 3600)
 """Using the texts and similar texts to get improvements to be made in the call with help of prompt engineering"""
 
 
-@async_capture_span("suggest_lawyer_improvements_with_openai")
+# @async_capture_span("suggest_lawyer_improvements_with_openai")
 async def suggest_lawyer_improvements_with_openai(
     segmented_json: List[Dict], run_id: str, request_id: str
 ) -> Dict:
@@ -1229,7 +1227,7 @@ Reference transcripts for comparison:
 gemini_improvement_cache = TTLCache(maxsize=500, ttl=12 * 3600)
 
 
-@async_capture_span("suggest_lawyer_improvements_with_gemini")
+# @async_capture_span("suggest_lawyer_improvements_with_gemini")
 async def suggest_lawyer_improvements_with_gemini(
     segmented_json: List[Dict], run_id: str, request_id: str
 ) -> Dict:
@@ -1404,7 +1402,7 @@ async def async_suggestion_with_limit(transcript, run_id, request_id, provider):
     return result
 
 
-@async_capture_span("async_suggestion")
+# @async_capture_span("async_suggestion")
 async def async_suggestion(
     transcript: str, run_id: str, request_id: str, provider: str
 ):

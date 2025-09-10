@@ -4,13 +4,14 @@ from time import time as now
 from typing import Any, Dict, List
 
 import httpx
-from elasticapm import async_capture_span
+
+# from elasticapm import async_capture_span
 from fastapi import HTTPException, Request
 
 from app.logging_config import logger
 
 
-@async_capture_span("send_webhook_notification")
+# @async_capture_span("send_webhook_notification")
 async def send_webhook_notification(
     webhook_url: str, processing_id: str, results: List[Dict[str, Any]]
 ):
@@ -127,7 +128,7 @@ rate_limit_cache = defaultdict(list)
 RATE_LIMIT = 100  # requests per minute
 
 
-@async_capture_span("check_rate_limit")
+# @async_capture_span("check_rate_limit")
 async def check_rate_limit(request: Request):
     """Check and enforce rate limit per IP (100/min). Raise HTTPException 429 if exceeded."""
     ip = request.client.host if request.client else "unknown"

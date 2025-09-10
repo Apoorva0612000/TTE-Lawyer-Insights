@@ -2,14 +2,15 @@ import os
 from typing import Dict
 
 from dotenv import load_dotenv
-from elasticapm import async_capture_span
+
+# from elasticapm import async_capture_span
 
 load_dotenv()
 
 TEST_BEARER_TOKEN = os.getenv("TEST_BEARER_TOKEN")  # gitleaks:allow
 
 
-@async_capture_span("authenticate")
+# @async_capture_span("authenticate")
 async def authenticate(authorization_header: str) -> Dict[str, str]:
     """
     Bearer token authentication logic (for testing).
